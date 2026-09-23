@@ -33,8 +33,8 @@ jobs:
 
       - name: Run solver
         env:
-          START: ${{ inputs.start }}
-          TARGET: ${{ inputs.target }}
+          START: ${{ inputs.start || '東京' }}
+          TARGET: ${{ inputs.target || '新宿' }}
         run: |
           python3 oomawari.py "$START" "$TARGET" | tee result.txt
 
