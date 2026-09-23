@@ -26,6 +26,10 @@ def load_graph(path: Path = DATA) -> dict[str, list[Edge]]:
             if len(row) != 4:
                 raise ValueError(f"invalid row: {row!r}")
             a, b, km, line = row
+            # The source dataset prefixes duplicate station names with a route hint,
+            # e.g. (武蔵)三郷. User-facing station names should remain plain.
+            a = a.replace("(武蔵)", "").replace("(横)", "").replace("(岸)", "").replace("(中)", "").replace("(川)", "").replace("(篠)", "").replace("(北)", "").replace("(成)", "").replace("(両)", "").replace("(烏)", "").replace("(信)", "").replace("(房)", "").replace("(総)", "").replace("(臨)", "")
+            b = b.replace("(武蔵)", "").replace("(横)", "").replace("(岸)", "").replace("(中)", "").replace("(川)", "").replace("(篠)", "").replace("(北)", "").replace("(成)", "").replace("(両)", "").replace("(烏)", "").replace("(信)", "").replace("(房)", "").replace("(総)", "").replace("(臨)", "")
             graph.setdefault(a, []).append(Edge(b, float(km), line))
             graph.setdefault(b, []).append(Edge(a, float(km), line))
     return graph
