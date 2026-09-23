@@ -31,6 +31,9 @@ jobs:
           test -f data/tokyo_near_zone.csv
           echo "data lines: $(wc -l < data/tokyo_near_zone.csv)"
 
+      - name: Install solver dependency
+        run: python3 -m pip install --quiet scipy
+
       - name: Run solver
         env:
           START: ${{ inputs.start || '東京' }}
