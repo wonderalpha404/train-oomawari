@@ -1,0 +1,43 @@
+name: Omawari route
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "出発駅"
+        required: true
+        type: string
+        default: "東京"
+      target:
+        description: "到着駅"
+        required: true
+        type: string
+        default: "新宿"
+
+permissions:
+  contents: read
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Check data
+        run: |
+          test -f data/tokyo_near_zone.csv
+          echo "data lines: $(wc -l < data/tokyo_near_zone.csv)"
+
+      - name: Run solver
+        env:
+          START: ${{ inputs.start }}
+          TARGET: ${{ inputs.target }}
+        run: |
+          python3 oomawari.py "$START" "$TARGET" | tee result.txt
+
+      - name: Publish result
+        uses: actions/upload-artifact@v4
+        with:
+          name: omawari-result
+          path: result.txt
