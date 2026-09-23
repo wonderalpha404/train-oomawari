@@ -23,8 +23,8 @@ jobs:
       - name: Commit dataset
         if: ${{ hashFiles('data/tokyo_near_zone.csv') }}
         run: |
-          if git diff --quiet -- data/tokyo_near_zone.csv; then
-            echo 'Dataset already present.'
+          if git ls-files --error-unmatch data/tokyo_near_zone.csv >/dev/null 2>&1; then
+            echo 'Dataset already tracked.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
