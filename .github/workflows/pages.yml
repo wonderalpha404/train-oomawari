@@ -1,0 +1,28 @@
+name: Deploy Pages
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**","scripts/build_site.py","oomawari.py","data/tokyo_near_zone.csv",".github/workflows/pages.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install station reading generator
+        run: python3 -m pip install --quiet pykakasi
+      - name: Build static site
+        run: python3 scripts/build_site.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with: {path: site}
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
