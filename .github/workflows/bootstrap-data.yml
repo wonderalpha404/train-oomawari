@@ -10,17 +10,22 @@ permissions:
 
 jobs:
   bootstrap:
-    if: ${{ !hashFiles('data/tokyo_near_zone.csv') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - name: Download dataset once
+        if: ${{ !hashFiles('data/tokyo_near_zone.csv') }}
         run: |
           mkdir -p data
-          curl -L --fail --retry 3             'https://note.com/api/v2/attachments/download/40553956b499e4fc2e32953c906bf574'             -o data/tokyo_near_zone.csv
+          curl -L --fail --retry 3 'https://note.com/api/v2/attachments/download/40553956b499e4fc2e32953c906bf574' -o data/tokyo_near_zone.csv
           test $(wc -l < data/tokyo_near_zone.csv) -eq 729
       - name: Commit dataset
+        if: ${{ hashFiles('data/tokyo_near_zone.csv') }}
         run: |
+          if git diff --quiet -- data/tokyo_near_zone.csv; then
+            echo 'Dataset already present.'
+            exit 0
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/tokyo_near_zone.csv
