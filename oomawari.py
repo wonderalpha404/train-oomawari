@@ -110,7 +110,7 @@ def longest_simple_path(
     # 2: visited vertices have exactly one incoming/outgoing arc, except s/t.
     # 3: one-unit-per-visited-vertex commodity flow.
     # 4: flow capacity g <= (n-1)y.
-    rows = 2 * m + 2 * n + n + 2 * m
+    rows = 3 * m + 3 * n
     A = lil_matrix((rows, N), dtype=float)
     lb = np.full(rows, -np.inf)
     ub = np.full(rows, np.inf)
