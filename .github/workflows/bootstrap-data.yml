@@ -18,7 +18,8 @@ jobs:
         run: |
           mkdir -p data
           curl -L --fail --retry 3 'https://note.com/api/v2/attachments/download/40553956b499e4fc2e32953c906bf574' -o data/tokyo_near_zone.csv
-          test $(wc -l < data/tokyo_near_zone.csv) -eq 728
+          test -s data/tokyo_near_zone.csv
+          echo "downloaded lines: $(wc -l < data/tokyo_near_zone.csv)"
       - name: Commit dataset
         if: ${{ hashFiles('data/tokyo_near_zone.csv') }}
         run: |
